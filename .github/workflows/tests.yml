@@ -10,6 +10,7 @@ jobs:
     name: ${{ matrix.os }} + node ${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-16.04, ubuntu-18.04]
         node-version: [10.x, 12.x]
@@ -23,13 +24,13 @@ jobs:
     - name: Install yarn
       run: |
         curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.15.2
-        export PATH="$HOME/.yarn/bin:$PATH"
     - name: Install packages
       run: |
         yarn --frozen-lockfile --non-interactive
+        yarn global add codecov
     - name: Lint and test
       run: |
-        yarn global add codecov
+        export PATH="$HOME/.yarn/bin:$PATH"
         cd packages/vuetify
         yarn build:lib
         cd ../..
