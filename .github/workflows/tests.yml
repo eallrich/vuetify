@@ -1,0 +1,38 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: ${{ matrix.os }} + node ${{ matrix.node-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04]
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install yarn
+      run: |
+        curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.15.2
+        export PATH="$HOME/.yarn/bin:$PATH"
+    - name: Install packages
+      run: |
+        yarn --frozen-lockfile --non-interactive
+    - name: Lint and test
+      run: |
+        yarn global add codecov
+        cd packages/vuetify
+        yarn build:lib
+        cd ../..
+        yarn run lint
+        lerna run test:coverage -- -i
+        codecov
