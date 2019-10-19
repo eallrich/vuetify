@@ -35,5 +35,5 @@ jobs:
         yarn build:lib
         cd ../..
         yarn run lint
-        yarn lerna run test:coverage -- -i
+        /home/runner/work/vuetify/vuetify/node_modules/.bin/lerna run test:coverage -- -i
         #codecov
