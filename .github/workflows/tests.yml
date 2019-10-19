@@ -35,5 +35,5 @@ jobs:
         yarn build:lib
         cd ../..
         yarn run lint
-        #lerna run test:coverage -- -i
+        PATH="$HOME/.yarn/bin:$PATH" lerna run test:coverage -- -i
         #codecov
